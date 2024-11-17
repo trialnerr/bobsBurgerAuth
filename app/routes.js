@@ -11,12 +11,19 @@ module.exports = function (app, passport, db) {
   // PROFILE SECTION =========================
   app.get('/profile', isLoggedIn, async function (req, res) {
     const characters = await getCharacters(0);
-    console.log('profile', req.user);
     res.render('profile.ejs', {
           user: req.user,
           characters: characters.data,
         });
   });
+  // //
+  // app.post('/profile', isLoggedIn, async function (req, res) {
+  //   const characters = await getCharacters(req.body.randCount);
+  //   res.render('profile.ejs', {
+  //     user: req.user,
+  //     characters: characters.data,
+  //   });
+  // });
 
   // LOGOUT ==============================
   app.get('/logout', function (req, res) {
