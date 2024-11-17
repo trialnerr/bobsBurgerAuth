@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+    <title>Bob Burger Site</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <h3>Favorites</h3>
+            <ul class="favorites">
+            <% if (user) {%>
+              <% for(let i=0; i<user.favorites.length; i++) {%>
+                <li class="favorites">
+                  <span>
+                    <%=user.favorites[i].name%>
+                  </span>
+                  <span><i class="fa fa-trash" aria-hidden="true"></i></span>
+                </li>
+                <% } %>
+             <% } %>
+            </ul>
+        </div>
+        <div class="col-sm-6">
+          <h3>Characters</h3>
+          <ul class="characters">
+          <% for(let i=0; i<characters.length; i++) {%>
+            <li class="character">
+              <span><%= characters[i].name %></span>
+              <span><i class="fa fa-heart" aria-hidden="true"></i></span>
+            </li>
+          <% } %>
+          </ul>
+          <button class="getMore">click to see more characters</button>
+          <h2>Dont see a character you like? Add it</h2>
+        <% if (user.local.email) { %>
+          <form action="/favorites" method="POST">
+            <input type="text" value="<%= user.local.email %>" name="user" disabled>
+            <input type="text" placeholder="Enter name of character" name="name">
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+        <% } %>
+
+</div>
+
+<script src="main.js"></script>
+
+</body>
+</html>
