@@ -1,4 +1,4 @@
-const getCharacters = require("./getCharacter");
+const getCharacters = require('./getCharacter');
 
 module.exports = function (app, passport, db) {
   // normal routes ===============================================================
@@ -12,18 +12,23 @@ module.exports = function (app, passport, db) {
   app.get('/profile', isLoggedIn, async function (req, res) {
     const characters = await getCharacters(0);
     res.render('profile.ejs', {
-          user: req.user,
-          characters: characters.data,
-        });
+      user: req.user,
+      characters: characters.data,
+    });
   });
-  // //
-  // app.post('/profile', isLoggedIn, async function (req, res) {
-  //   const characters = await getCharacters(req.body.randCount);
-  //   res.render('profile.ejs', {
-  //     user: req.user,
-  //     characters: characters.data,
-  //   });
-  // });
+
+  //unused post cause didnt work
+  app.post('/update', isLoggedIn, async function (req, res) {
+    const rand = req.body.randCount;
+    console.log({ rand });
+    const characters = await getCharacters(rand);
+    console.log(characters); 
+    res.render('profile.ejs', {
+      user: req.user,
+      characters: characters.data,
+    });
+  });
+
 
   // LOGOUT ==============================
   app.get('/logout', function (req, res) {
@@ -36,11 +41,12 @@ module.exports = function (app, passport, db) {
   // favorite routes ===============================================================
   app.post('/favorites', async (req, res) => {
     try {
-      const exists = req.user.favorites.some(fav => fav.name === req.body.name.trim());
+      const name = req.body.name.trim();
+      const exists = req.user.favorites.some((fav) => fav.name === name);
       if (!exists) {
-        req.user.favorites.push(req.body);
+        req.user.favorites.push({ name });
         await req.user.save();
-        res.render('profile');
+        res.redirect('/profile');
       } else {
         res.status(400).send('Character already in favorites');
       }
@@ -52,11 +58,13 @@ module.exports = function (app, passport, db) {
 
   app.delete('/favorites', async (req, res) => {
     try {
-      req.user.favorites = req.user.favorites.filter((obj => obj.name != req.body.name.trim()));
+      req.user.favorites = req.user.favorites.filter(
+        (obj) => obj.name != req.body.name.trim()
+      );
       await req.user.save();
       res.redirect('/profile');
     } catch (error) {
-      console.error('Error deleting character', error); 
+      console.error('Error deleting character', error);
       res.status(500).send('Error deleting character');
     }
   });
