@@ -1,7 +1,18 @@
 body{
   padding-top:80px;
   word-wrap:break-word;
+  background-color: rgb(242, 235, 235);
 }
 img{
   height: 200px;
+}
+.favorite,
+.character {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  margin: 5px 0;
+  background-color: pink;
+  border-radius: 5px;
 }
